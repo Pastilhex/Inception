@@ -1,5 +1,5 @@
 # ignore ALL .dockerignore files
-*.dockerignore
+.dockerignore
 
 # ignore ALL files in ANY directory named secrets
 secrets/
