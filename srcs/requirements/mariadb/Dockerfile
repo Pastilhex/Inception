@@ -1,12 +1,20 @@
 FROM debian:bullseye
 
-RUN apt update
-RUN apt install nginx -y
-RUN apt install vim -y
-RUN apt-get install mariadb-server -y
+# Instalar dependências e MariaDB
+RUN apt-get update && \
+    apt-get install -y mariadb-server vim && \
+    apt-get clean
 
+# Criar o diretório para o socket do MariaDB e ajustar permissões
+RUN mkdir -p /var/run/mysqld && \
+    chown mysql:mysql /var/run/mysqld
+
+# Copiar arquivos de configuração e script de inicialização
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-COPY conf/mariadb.sh /etc/mysql/mariadb.conf.d/mariadb.sh
+COPY conf/mariadb.sh /usr/local/bin/mariadb.sh
 
-RUN chmod +x /etc/mysql/mariadb.conf.d/mariadb.sh
-RUN /etc/mysql/mariadb.conf.d/mariadb.sh
+# Tornar o script executável
+RUN chmod +x /usr/local/bin/mariadb.sh
+
+# Executar o script de inicialização ao iniciar o contêiner
+CMD ["/usr/local/bin/mariadb.sh"]
