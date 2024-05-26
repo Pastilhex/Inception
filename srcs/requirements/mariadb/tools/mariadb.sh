@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ ! -d "/var/lib/mysql/my_db" ]; then
-	mysqld_safe --datadir=/var/lib/mysql --user=mysql
+	mysqld_safe --user=mysql --datadir=/var/lib/mysql --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --log-error=/var/log/mysql/error.log &
+
 
 	sleep 2
 
