@@ -6,6 +6,8 @@ services:
     ports:
       - "443:443"
     restart: always
+    networks:
+      - inception
 
   mariadb:
     container_name: mariadb
@@ -15,7 +17,9 @@ services:
     ports:
       - "3306:3306"
     restart: always
-  
+    networks:
+      - inception
+
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
@@ -24,5 +28,10 @@ services:
     ports:
       - "9000:9000"
     restart: always
+    networks:
+      - inception
 
+networks:
+  inception:
+    driver: bridge
 
