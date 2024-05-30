@@ -19,6 +19,11 @@ services:
     restart: always
     networks:
       - inception
+    depends_on:
+      - nginx
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./requirements/mariadb/conf/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf:ro
 
   wordpress:
     container_name: wordpress
@@ -30,8 +35,28 @@ services:
     restart: always
     networks:
       - inception
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress-data:/var/www/html/ialves-m/wordpress/
 
 networks:
   inception:
+    name: inception_network
     driver: bridge
 
+volumes:
+  mariadb-data:
+    name: mariadb_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/data/db
+      o: bind
+  wordpress-data:
+    name: wordpress_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/data/wp
+      o: bind
