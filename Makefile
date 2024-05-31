@@ -2,7 +2,7 @@
 MARIADB		= mariadb
 NGINX		= nginx
 WORDPRESS	= wordpress
-
+VOLUMES_PATH = /home/ialves-m
 COMPOSE		= sudo docker compose -f srcs/docker-compose.yml
 DOCKER		= sudo docker
 include srcs/.env

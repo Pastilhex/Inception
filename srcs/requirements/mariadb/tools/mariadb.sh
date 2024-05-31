@@ -7,9 +7,9 @@ if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
 
     mysqld_safe --user=mysql --datadir=/var/lib/mysql --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock & # --log-error=/var/log/mysql/error.log &
     
-    while ! mysqladmin ping -h localhost --silent; do
-        sleep 1
-    done
+    # while ! mysqladmin ping -h localhost --silent; do
+    #     sleep 1
+    # done
     
     mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};" -h localhost
     mysql -u root -e "CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';" -h localhost

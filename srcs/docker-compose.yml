@@ -19,8 +19,11 @@ services:
     restart: always
     networks:
       - inception
-    depends_on:
-      - nginx
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 5s
+      timeout: 4s
+      retries: 5
     volumes:
       - mariadb-data:/var/lib/mysql
       - ./requirements/mariadb/conf/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf:ro
@@ -36,7 +39,8 @@ services:
     networks:
       - inception
     depends_on:
-      - mariadb
+      mariadb:
+        healthcheck
     volumes:
       - wordpress-data:/var/www/html/ialves-m/wordpress/
 
@@ -51,12 +55,12 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/ialves-m/db
+      device: /home/ialves-m/data/db
       o: bind
   wordpress-data:
     name: wordpress_volume
     driver: local
     driver_opts:
       type: none
-      device: /home/ialves-m/wp
+      device: /home/ialves-m/data/wp
       o: bind
