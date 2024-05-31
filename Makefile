@@ -7,7 +7,7 @@ COMPOSE		= sudo docker compose -f srcs/docker-compose.yml
 DOCKER		= sudo docker
 include srcs/.env
 
-HOST_NAME=firibeir.42.fr
+HOST_NAME=ialves-m.42.fr
 HOSTS_ENTRY=“127.0.1.1       $(HOST_NAME)”
 
 .SILENT:

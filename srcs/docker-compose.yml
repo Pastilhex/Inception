@@ -13,7 +13,7 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb
     image: mariadb:42v1.0
-    env_file: ./.env
+    env_file: .env
     ports:
       - "3306:3306"
     restart: always
@@ -29,7 +29,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress
     image: wordpress:42v1.0
-    env_file: ./.env
+    env_file: .env
     ports:
       - "9000:9000"
     restart: always
@@ -51,12 +51,12 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/data/db
+      device: /home/ialves-m/db
       o: bind
   wordpress-data:
     name: wordpress_volume
     driver: local
     driver_opts:
       type: none
-      device: /home/data/wp
+      device: /home/ialves-m/wp
       o: bind
