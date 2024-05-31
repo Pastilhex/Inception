@@ -10,4 +10,6 @@ RUN	apt install curl -y && curl -O https://raw.githubusercontent.com/wp-cli/buil
 
 RUN	chmod +x wp-cli.phar && mv wp-cli.phar /usr/bin/wp
 
+EXPOSE 9000
+
 ENTRYPOINT [ "/tools/entrypoint.sh" ]

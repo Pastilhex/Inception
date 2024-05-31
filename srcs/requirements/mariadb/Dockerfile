@@ -4,10 +4,10 @@ RUN apt-get update && \
     apt-get install -y mariadb-server && \
     apt-get clean
 
-RUN mkdir -p /var/run/mysqld && \
-    chown mysql:mysql /var/run/mysqld
+RUN mkdir -p /run/mysqld && \
+    chown mysql:mysql /run/mysqld
 
-COPY ./tools/mariadb.sh /tools/mariadb.sh
-RUN chmod +x /tools/mariadb.sh
+COPY ./tools/mariadb.sh /mariadb.sh
+RUN chmod +x /mariadb.sh
 
-ENTRYPOINT ["/tools/mariadb.sh"]
+ENTRYPOINT [ "sh", "/mariadb.sh" ]

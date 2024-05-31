@@ -50,14 +50,23 @@ setup-hosts:
 	else \
 		echo “$(HOST_NAME) already in /etc/hosts”; \
 	fi
+
 mkdir-data:
-	sudo mkdir -p $(VOLUMES_PATH)/data/mysql $(VOLUMES_PATH)/data/wordpress
+	sudo mkdir -p $(VOLUMES_PATH)/data/db $(VOLUMES_PATH)/data/wp
+
 compose-build:
 	$(COMPOSE) build --no-cache
+
 compose-up:
 	$(COMPOSE) up -d
+
 compose-stop:
 	$(COMPOSE) stop
+
 compose-clean:
 	$(COMPOSE) down --rmi all --volumes
+
+sys-df:
+	$(DOCKER) system df
+
 .PHONY: all start stop clean clean-data re logs info mariadb-it nginx-it wordpress-it
