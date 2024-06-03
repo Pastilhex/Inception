@@ -10,11 +10,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/i
 # COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/ialves-m.conf /etc/nginx/sites-available
 
-RUN ln -s /etc/nginx/sites-available/ialves-m.conf /etc/nginx/sites-enabled/ialves-m.conf
-RUN mkdir -p /var/www/html/ialves-m
-RUN chmod 755 /var/www/html/ialves-m
-
-RUN chown -R www-data:www-data /var/www/html/ialves-m
+RUN ln -s /etc/nginx/sites-available/ialves-m.conf /etc/nginx/sites-enabled/
 
 EXPOSE 443
 
