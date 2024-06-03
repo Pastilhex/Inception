@@ -24,12 +24,12 @@ services:
     restart: always
     networks:
       - inception
-    # healthcheck:
-    #   test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD} || exit 1"]
-    #   interval: 5s
-    #   timeout: 4s
-    #   retries: 5
-    #   start_period: 3s
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
     volumes:
       - mariadb-data:/var/lib/mysql
       - ./requirements/mariadb/conf/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf:ro
@@ -46,7 +46,8 @@ services:
     networks:
       - inception
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     volumes:
       - wordpress-data:/var/www/html/ialves-m/wordpress/
 
