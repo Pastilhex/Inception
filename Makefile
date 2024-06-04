@@ -8,7 +8,7 @@ DOCKER		= sudo docker
 include srcs/.env
 
 HOST_NAME=ialves-m.42.fr
-HOSTS_ENTRY=127.0.0.1 $(HOST_NAME)
+HOSTS_ENTRY=“127.0.1.1       $(HOST_NAME)”
 
 .SILENT:
 
@@ -65,6 +65,7 @@ compose-stop:
 
 compose-clean:
 	$(COMPOSE) down --rmi all --volumes
+	$(DOCKER) system prune -a
 
 sys-df:
 	$(DOCKER) system df
