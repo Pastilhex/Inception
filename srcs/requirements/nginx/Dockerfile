@@ -7,7 +7,6 @@ RUN mkdir -p /etc/nginx/ssl
 RUN apt install openssl -y
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/inception.key -out /etc/nginx/ssl/inception.crt -subj "/C=PT/ST=OPO/L=Porto/O=42"
 
-# COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/ialves-m.conf /etc/nginx/sites-available
 
 RUN ln -s /etc/nginx/sites-available/ialves-m.conf /etc/nginx/sites-enabled/
