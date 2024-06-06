@@ -1,62 +1,97 @@
+# Define services for the application
+
 services:
+  # Nginx service to serve web content
   nginx:
+    # Container name for the Nginx service
     container_name: nginx
+    # Build context for Nginx Dockerfile
     build: ./requirements/nginx
+    # Docker image for Nginx service
     image: nginx:42v1.0
+    # Port mapping for Nginx service
     ports:
       - "443:443"
+    # Restart policy for Nginx service
     restart: always
+    # Network configuration for Nginx service
     networks:
       - inception
+    # Dependence on the Wordpress service
     depends_on:
       - wordpress
+    # Volume mapping for Nginx service
     volumes:
       - wordpress-data:/var/www/html/ialves-m/wordpress/
 
+  # MariaDB service for database storage
   mariadb:
+    # Container name for the MariaDB service
     container_name: mariadb
+    # Build context for MariaDB Dockerfile
     build: ./requirements/mariadb
+    # Docker image for MariaDB service
     image: mariadb:42v1.0
+    # Environment variables file for MariaDB service
     env_file:
       - .env
+    # Port mapping for MariaDB service
     ports:
       - "3306:3306"
+    # Restart policy for MariaDB service
     restart: always
+    # Network configuration for MariaDB service
     networks:
       - inception
+    # Healthcheck configuration for MariaDB service
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD} || exit 1"]
       interval: 5s
-      timeout: 5s
+      timeout: 4s
       retries: 5
-      start_period: 5s
+      start_period: 3s
+    # Volume mapping for MariaDB service
     volumes:
       - mariadb-data:/var/lib/mysql
       - ./requirements/mariadb/conf/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf:ro
 
+  # Wordpress service for web content management
   wordpress:
+    # Container name for the Wordpress service
     container_name: wordpress
+    # Build context for Wordpress Dockerfile
     build: ./requirements/wordpress
+    # Docker image for Wordpress service
     image: wordpress:42v1.0
+    # Environment variables file for Wordpress service
     env_file:
       - .env
+    # Port mapping for Wordpress service
     ports:
       - "9000:9000"
+    # Restart policy for Wordpress service
     restart: always
+    # Network configuration for Wordpress service
     networks:
       - inception
+    # Dependence on the MariaDB service with healthcheck condition
     depends_on:
       mariadb:
         condition: service_healthy
+    # Volume mapping for Wordpress service
     volumes:
       - wordpress-data:/var/www/html/ialves-m/wordpress/
 
+# Define networks for the application
 networks:
+  # Network configuration for the application
   inception:
     name: inception_network
     driver: bridge
 
+# Define volumes for the application
 volumes:
+  # Volume for MariaDB data
   mariadb-data:
     name: mariadb_volume
     driver: local
@@ -64,6 +99,7 @@ volumes:
       type: none
       device: /home/ialves-m/data/db
       o: bind
+  # Volume for Wordpress data
   wordpress-data:
     name: wordpress_volume
     driver: local

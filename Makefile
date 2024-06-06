@@ -1,14 +1,13 @@
-
-MARIADB		= mariadb
-NGINX		= nginx
-WORDPRESS	= wordpress
-VOLUMES_PATH = /home/ialves-m
-COMPOSE		= sudo docker compose -f srcs/docker-compose.yml
-DOCKER		= sudo docker
+MARIADB = mariadb
+NGINX = nginx
+WORDPRESS = wordpress
+VOLUMES_PATH = /home/ialves-m/data
+COMPOSE = sudo docker compose -f srcs/docker-compose.yml
+DOCKER = sudo docker
 include srcs/.env
 
-HOST_NAME=ialves-m.42.fr
-HOSTS_ENTRY=127.0.0.1 $(HOST_NAME)
+HOST_NAME = ialves-m.42.fr
+HOSTS_ENTRY = 127.0.0.1 $(HOST_NAME)
 
 .SILENT:
 
@@ -16,12 +15,9 @@ all: setup-hosts mkdir-data compose-build compose-up
 
 start: compose-up
 
-stop: compose-stop
+stop: compose-down
 
 clean: compose-clean
-
-clean-data: clean
-	sudo rm -rf $(VOLUMES_PATH)
 
 re: clean all
 
@@ -34,25 +30,28 @@ info:
 	$(DOCKER) network ls
 	$(DOCKER) volume ls
 
-maria_shell:
-	$(DOCKER) exec -it mariadb_conteiner /bin/bash
+mariadb-shell:
+	$(DOCKER) exec -it $(MARIADB) bash
 
 nginx-shell:
-	$(DOCKER) exec -it nginx_conteiner /bin/bash
+	$(DOCKER) exec -it $(NGINX) bash
 
 wordpress-shell:
-	$(DOCKER) exec -it wordpress_conteiner /bin/bash
+	$(DOCKER) exec -it $(WORDPRESS) bash
 	
 setup-hosts:
 	@if ! grep -q $(HOST_NAME) /etc/hosts; then \
 		echo $(HOSTS_ENTRY) | sudo tee -a /etc/hosts > /dev/null; \
-		echo “Added $(HOST_NAME) to /etc/hosts”; \
+		echo "Added $(HOST_NAME) to /etc/hosts"; \
 	else \
-		echo “$(HOST_NAME) already in /etc/hosts”; \
+		echo "$(HOST_NAME) already in /etc/hosts"; \
 	fi
 
 mkdir-data:
-	sudo mkdir -p $(VOLUMES_PATH)/data/db $(VOLUMES_PATH)/data/wp
+	sudo mkdir -p $(VOLUMES_PATH)/db $(VOLUMES_PATH)/wp
+
+clean-data: compose-clean
+	sudo rm -rf $(VOLUMES_PATH)
 
 compose-build:
 	$(COMPOSE) build --no-cache
@@ -60,14 +59,15 @@ compose-build:
 compose-up:
 	$(COMPOSE) up -d
 
-compose-stop:
+compose-down:
 	$(COMPOSE) stop
 
 compose-clean:
 	$(COMPOSE) down --rmi all --volumes
-	$(DOCKER) system prune -a
+	echo y | $(DOCKER) system prune -a
+	$(DOCKER) system df
 
 sys-df:
 	$(DOCKER) system df
 
-.PHONY: all start stop clean clean-data re logs info mariadb-it nginx-it wordpress-it
+.PHONY: all start stop clean clean-data re logs info mariadb-shell nginx-shell wordpress-shell
